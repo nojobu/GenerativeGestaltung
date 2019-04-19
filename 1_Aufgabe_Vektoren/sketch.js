@@ -63,3 +63,33 @@ function draw() {
 
   fr.html(floor(frameRate()));
 }
+
+function drawDeformedCircle(ctx: CanvasRenderingContext2D,
+                                   circle: {x: number, y: number, radius: number},
+                                   frequency: number,
+                                   magnitude: number,
+                                   seed: number = 0): void {
+	ctx.beginPath();
+
+	// Sample points evenly around the circle
+	samples = floor(4 * circle.radius + 20);
+	for (let j = 0; j < samples + 1; ++j) {
+		angle = (2 * PI * j) / samples;
+
+		// Figure out the x/y coordinates for the given angle
+		y = sin(angle);
+		x = cos(angle);
+
+		// Randomly deform the radius of the circle at this point
+		deformation = noise.noise3D(x * frequency,
+										  y * frequency,
+										  seed) + 1;
+		radius = circle.radius * (1 + magnitude * deformation);
+
+		// Extend the circle to this deformed radius
+		ctx.lineTo(circle.x + radius * x,
+				   circle.y + radius * y);
+	}
+	ctx.fill();
+	ctx.stroke();
+}
