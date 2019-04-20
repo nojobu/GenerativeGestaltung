@@ -33,6 +33,7 @@ function setup() {
     rows = floor(height/scl);
   //background(51);
     fr = createP('');
+    stroke(0, 128);
 }
 
 
@@ -40,6 +41,7 @@ function setup() {
 
 function draw() {
     background(255);
+    //Flow field
   var yoff = 0;
   for (var y = 0; y < rows; y++) {
     var xoff = 0;
