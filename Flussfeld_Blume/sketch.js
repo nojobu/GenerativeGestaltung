@@ -1,77 +1,132 @@
-   
-'use strict';
-// Daniel Shiffman
+// As a base code we used the code of Daniel Shiffman
 // http://codingtra.in
 // http://patreon.com/codingtrain
 // Code for: https://youtu.be/BjoM9oKOAKY
+// and the P_2_1_3_01 
+//https://editor.p5js.org/generative-design/sketches/P_2_1_3_01
+// http://www.generative-gestaltung.de
+
+'use strict';
+
 
 var inc = 0.1;
-//scale
-var scl = 30;
-var cols, rows;
-
 var zoff = 0;
-
 var fr;
-var flowers = [];
+
+var tileCountX = 8;
+var tileCountY = 8;
+var tileWidth = 0;
+var tileHeight = 0;
 
 
-
+var circleCount = 0;
+var endSize = 0;
 
 var actRandomSeed = 0;
 
 
 
-
-
-
 function setup() {
-  createCanvas(400, 400);
- 
-  //flowfield = new Array(cols * rows);
-    cols = floor(width/scl);
-    rows = floor(height/scl);
-  //background(51);
-    fr = createP('');
-    stroke(0, 128);
+  createCanvas(800, 800);
+  tileWidth = width / tileCountX;
+  tileHeight = height / tileCountY;
+  noFill();
+  stroke(0, 128);
 }
 
-
-
-
 function draw() {
-    background(255);
-    //Flow field
-  var yoff = 0;
-  for (var y = 0; y < rows; y++) {
+    
+    
+    //von vector neuer x und y position von point head anstatt maus
+  background(255);
+ 
+
+    var angle = noise(xoff, yoff, zoff) * TWO_PI * 4;
+    var v = p5.Vector.fromAngle(angle);
+    
+    
+    
+    
+    
+  translate(tileWidth / 2, tileHeight / 2);
+
+  circleCount = 9;
+    var yoff = 0;
+  for (var gridY = 0; gridY <= tileCountY; gridY++) {
     var xoff = 0;
-    for (var x = 0; x < cols; x++) {
-      var index = x + y * cols;
-      var angle = noise(xoff, yoff, zoff) * TWO_PI * 4;
+      for (var gridX = 0; gridX <= tileCountX; gridX++) {
+      
+         
+         // print('v.y '+v.y); 
+           //print('heading '+v.heading());
+    var angle = noise(xoff, yoff, zoff) * TWO_PI * 4;
       var v = p5.Vector.fromAngle(angle);
         
        //draw basic circle here
-      flowers[index]= new Flower(x,y,scl,v.heading());
-     
-     
       xoff += inc;
       stroke(0);
+
+        
+       /* Show flowfield
        push();
-        translate(x*scl, y*scl);
+        translate(gridX*tileWidth, gridY * tileHeight);
         rotate(v.heading());
         line(0,0,scl,0);
+         pop();*/
+          
+       push();   
+      translate(tileWidth * gridX, tileHeight * gridY);
+      scale(1, tileHeight / tileWidth);
+          
+         rotate(v.heading());
         
-        pop();
+       
+
+      // draw module
+      for (var i = 0; i < circleCount; i++) {
+        var diameter = map(i, 0, circleCount, tileWidth, endSize);
+ var strokeColor = color(0, 10);
+            
+    var toggle = int(random(0, 4));
+          
+      if (toggle == 0) {print(toggle)
+      strokeColor = color(255, 10);}
+      if (toggle == 1) {strokeColor = color(192, 100, 64, 10);}
+      if (toggle == 2) {strokeColor = color(52, 100, 71, 10);}
+      if (toggle == 3) {strokeColor = color(197, 0, 123);}
+
+        
+          stroke(strokeColor);
+          //Shape algorithm is inspired of the TypeScript code at https://www.benfrederickson.com/flowers-from-simplex-noise/
+          beginShape();
+      for(var a = 0; a < TWO_PI; a+=0.1){
+        //randomly deform radius with perlin noise
+        let xoff = cos(a)+1;
+        let yoff = sin(a)+1;
+        var radius =diameter/2;
+          var frequency =  map(v.heading(),-2,2,5.0,10.0); // var frequency = 6.85;
+        let deformation = map(noise(xoff * frequency, yoff * frequency),0,1,radius/2,radius);
+          
+          
+          
+            //const radius = radius * (1 + magnitude * deformation);
+
+         
+
+         //var r=map(noise(xoff,yoff),0,1,diameter/4,diameter/2);
+          var x = deformation* cos(a);
+          var y = deformation* sin(a);
+       vertex(x,y);
+      }
+      endShape(CLOSE); 
+          
+          
+      }
+      pop();
     }
     yoff += inc;
-    zoff += 0.0004;
+      zoff += 0.0004;
   }
-
-//Update view for changing flowers:
-    for(var i = 0; i<flowers.length;i++){
-    //flowers[i].update();
-    flowers[i].show();
-
- fr.html(floor(frameRate()));
 }
-}    
+
+
