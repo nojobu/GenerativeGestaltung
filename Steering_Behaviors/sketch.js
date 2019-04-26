@@ -5,7 +5,8 @@
 
 var font;
 let bounds;
-var vehicles = [];
+var bubbles = [];
+var spots;
 
 function preload() {
   font = loadFont('Montserrat-Bold.otf');
@@ -13,40 +14,61 @@ function preload() {
 
 function setup() {
   createCanvas(600, 300);
-  background(0,0,255);
-  // textFont(font);
-  // textSize(192);
+  background(0,0,0);
+  textFont(font);
+   textSize(width/3);
    fill(255);
+    textAlign(CENTER, CENTER);
    //noStroke();
-   text('train', 100, 200);
+   text('Aqua', width/2, height/2);
 
-  var points = font.textToPoints('blub', 90, 200, 192, {
+  var points = font.textToPoints('Aqua', 60, 200, 150, {
     sampleFactor: 0.1
       //sampleFactor: 5,simplifyThreshold: 0
   });
-    bounds = font.textBounds('blub', 90, 200, 192);
+  
+    
+    //check brigthness og canvas inorder to fill text with bubbles
+    loadPixels();
 
-  for (var i = 0; i < points.length; i++) {
-    var p = points[i];
+    spots = [];
+    
+      for (var x = 0; x < width; x++) {
+        for (var y = 0; y < height; y++) {
+          var index = x + y * width;
+          var c = pixels[index*4];
+        //save vector of text    
+          var b = brightness([c]);
+          if (b > 1) {
+            spots.push(createVector(x, y));
+          }
+        }
+
+     } 
+    
+    
+    
+   //do not fill all spots due to runtime and metaballs 
+  for (var i = 0; i < spots.length; i= i+20) {
+    var p = spots[i];
     let a = random(0,10);
     let xoff = cos(a)+1;
     let yoff = sin(a)+1;
     var r_size = map(noise(xoff, yoff),0,1,1,28);  
     //console.log(r_size);
-    var vehicle = new Vehicle(p.x, p.y, r_size);
-    vehicles.push(vehicle);
+    var bubble = new Bubble(p.x, p.y, r_size);
+    bubbles.push(bubble);
       
       
-      
-      stroke(0);
-    fill(255, 104, 204);
-      beginShape();
-  //translate(-bounds.x * width / bounds.w, -bounds.y * height / bounds.h);
- 
-    vertex(
-      p.x * width / bounds.w ,p.y * height / bounds.h);
+ //vertex(p.x * width / bounds.w , p.y * height / bounds.h);
+   // vertex(p.x , p.y);
   }
-  endShape(CLOSE);
+    
+    
+}
+ 
+
+ 
       
     // stroke(255);
     // strokeWeight(8);
@@ -54,19 +76,16 @@ function setup() {
   
     
     
-}
+
 
 function draw() {
   background(0,0,255);
-  for (var i = 0; i < vehicles.length; i++) {
-    var v = vehicles[i];
-    v.behaviors();
-    v.update();
-    v.show();
+  for (var i = 0; i < bubbles.length; i++) {
+    var b = bubbles[i];
+    b.behaviors();
+    b.update();
+    b.show();
   }
-    
-    stroke(0);
-  fill(255, 104, 204);
     
     
 }

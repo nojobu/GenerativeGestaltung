@@ -3,17 +3,19 @@
 // Steering Text Paths
 // Video: https://www.youtube.com/watch?v=4hA7G3gup-4
 
-function Vehicle(x, y, r_size) {
-  this.pos = createVector(0, height);
+function Bubble(x, y, r_size) {
+    //scan typostartpoint and endpoint to let bubble refill here
+  this.pos = createVector(x, height);
   this.target = createVector(x, y);
-  this.vel = p5.Vector.random2D();
+  this.vel = createVector(0, 1);
   this.acc = createVector();
   this.r = r_size;
   this.maxspeed = 10;
   this.maxforce = 1;
+  this.mass= 0.0;
 }
 
-Vehicle.prototype.behaviors = function() {
+Bubble.prototype.behaviors = function() {
   var arrive = this.arrive(this.target);
   var mouse = createVector(mouseX, mouseY);
   var flee = this.flee(mouse);
@@ -25,24 +27,27 @@ Vehicle.prototype.behaviors = function() {
   this.applyForce(flee);
 }
 
-Vehicle.prototype.applyForce = function(f) {
-  this.acc.add(f);
+Bubble.prototype.applyForce = function(f) {
+  var force = f.div(this.mass);
+  this.acc.add(force);
 }
 
-Vehicle.prototype.update = function() {
+Bubble.prototype.update = function() {
   this.pos.add(this.vel);
   this.vel.add(this.acc);
   this.acc.mult(0);
 }
 
-Vehicle.prototype.show = function() {
-  stroke(255);
+Bubble.prototype.show = function() {
+  fill('rgba(100%,100%,100%,0.15)');
+  stroke('rgba(100%,100%,100%,0.25)');
+  strokeWeight(4);
   strokeWeight(this.r);
   point(this.pos.x, this.pos.y);
 }
 
 
-Vehicle.prototype.arrive = function(target) {
+Bubble.prototype.arrive = function(target) {
   var desired = p5.Vector.sub(target, this.pos);
   var d = desired.mag();
   var speed = this.maxspeed;
@@ -55,7 +60,7 @@ Vehicle.prototype.arrive = function(target) {
   return steer;
 }
 
-Vehicle.prototype.flee = function(target) {
+Bubble.prototype.flee = function(target) {
   var desired = p5.Vector.sub(target, this.pos);
   var d = desired.mag();
   if (d < 50) {
