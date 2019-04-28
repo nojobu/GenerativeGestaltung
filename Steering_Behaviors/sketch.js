@@ -71,7 +71,7 @@ function setup() {
   }
     
 // Create liquid object
- water = new Water(0, height / 2, width, height / 2, 0.1);
+ water = new Water(0, height / 5, width, height , 0.1);
     background(255,255,255);
 }
  

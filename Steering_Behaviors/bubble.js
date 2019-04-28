@@ -10,9 +10,9 @@ function Bubble(x, y, r_size) {
   this.vel = createVector(0, 1);
   this.acc = createVector();
   this.r = r_size;
-  this.maxspeed = 15;
+  this.maxspeed = 10;
   this.maxforce = 2;
-  this.mass= 1.0;
+  this.mass= 1.3;
     
 this.lifter = createVector(0, random(0, 0.2));  
 }
