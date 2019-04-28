@@ -3,7 +3,7 @@
 // Steering Text Paths
 // Video: https://www.youtube.com/watch?v=4hA7G3gup-4
 
-function Bubble(x, y, r_size) {
+function Bubble(x, y, r_size,m) {
     //scan typostartpoint and endpoint to let bubble refill here
   this.pos = createVector(x, height);
   this.target = createVector(x, y);
@@ -12,7 +12,7 @@ function Bubble(x, y, r_size) {
   this.r = r_size;
   this.maxspeed = 10;
   this.maxforce = 2;
-  this.mass= 1.3;
+  this.mass= 2.0;
     
 this.lifter = createVector(0, random(0, 0.2));  
 }
@@ -22,11 +22,13 @@ Bubble.prototype.behaviors = function() {
     
   var mouse = createVector(mouseX, mouseY);
   var flee = this.flee(mouse);
-  var lift = this.lift(mouse);  
+  
     
+//    let dx = map(mouseX, 0, width, -1, 1);
+//  let wind = createVector(mouseX, 0);
+    var lift = this.lift(mouse);
 
  //var current = this.currency(this.target);  
-    
   bubbleUp.mult(2);
 //current.mult(1);
   flee.mult(5);
@@ -46,9 +48,10 @@ Bubble.prototype.applyForce = function(f) {
 Bubble.prototype.update = function() {
   this.pos.add(this.vel);
   this.vel.add(this.acc);
+//this.lifter.y+=0.00001;
+    
   this.acc.mult(0);
     
-  //this.lift(this.lift);
 }
 
 Bubble.prototype.show = function() {
@@ -66,6 +69,9 @@ Bubble.prototype.show = function() {
 
 //DODO: bubbles to disappier and to create word
 Bubble.prototype.bubbleUp = function(target) {
+    
+   
+        
     //from position to desired target
   var desired = p5.Vector.sub(target, this.pos);
   var d = desired.mag();
@@ -75,55 +81,47 @@ Bubble.prototype.bubbleUp = function(target) {
   }
   desired.setMag(speed);
   var steer = p5.Vector.sub(desired, this.vel);
-  steer.limit(this.maxforce);
+  steer.limit(this.maxforce); 
+   
   return steer;
+
+      
 }
 
 //LIFT
 Bubble.prototype.lift = function(target) {
     
+     
     
-    
-   let top = createVector(this.pos.x, this.pos.y);
+   let top = createVector(0, this.pos.y);
   //var desired = p5.Vector.sub(target, this.pos);
    var desired = p5.Vector.sub(target, this.pos);
     var d = desired.mag();
     
-    this.lifter.y-=0.00001;
-  if (d < 50) {
     
-  desired.mult(1);
-  
-  var steer = p5.Vector.sub(desired, this.vel);
-  
-  return steer; 
+    
+
+      desired.mult(-10);
+  if (d < 50) {
+      var steer = p5.Vector.sub(desired, this.vel);
+
+      steer.limit(this.maxforce);
+     // randombubbles();
+    return steer;
   } else {
     return createVector(0, 0);
  }
 }
 
 
-//DODO: simulating waves/currency underwater
-Bubble.prototype.currency = function(target) {
-  var desired = p5.Vector.sub(target, this.pos);
-  var d = desired.mag();
-   // pts[i].x + sin(frameCount*0.05 + pts[i].y*0.1)*5, pts[i].y)
-  
-    
-    //nor working like that: var steer = p5.Vector.sub(desired+ sin(TWO_PI), this.vel);
- // var steer = p5.Vector.sub(desired+ sin(TWO_PI), this.vel);
-    
-    let a = random(0,10);
-    let wave = sin(a)+1;
-    var steer = p5.Vector.sub(desired, this.vel);
- 
-  return steer;
-}
-
-
-
-
-
+//Create random bubbles
+//Bubble.prototype.randombubbles = function() {
+//    fill('rgba(100%,100%,100%,0.15)');
+//  stroke('rgba(100%,100%,100%,0.25)');
+//  strokeWeight(4);
+//  strokeWeight(random(1,this.r));
+//  fill(0);
+//}
 
 //DODO:flee and bubbel up to top and bubbrl up from bottom do refill letters again
 Bubble.prototype.flee = function(target) {
