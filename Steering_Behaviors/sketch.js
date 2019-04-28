@@ -7,9 +7,15 @@ var font;
 let bounds;
 var bubbles = [];
 var spots;
+var arrowMouse; 
+var water;
+ 
 
 function preload() {
   font = loadFont('Montserrat-Bold.otf');
+  // cursor img: https://www.freeiconspng.com/uploads/fish-png-11.png
+    //cursor('https://www.freeiconspng.com/uploads/fish-png-11.png');
+arrowMouse = loadImage("fish.png");
 }
 
 function setup() {
@@ -17,7 +23,7 @@ function setup() {
   background(0,0,0);
   textFont(font);
    textSize(width/3);
-   fill(255);
+   fill(255);  
     textAlign(CENTER, CENTER);
    //noStroke();
    text('Aqua', width/2, height/2);
@@ -49,7 +55,7 @@ function setup() {
     
     
    //do not fill all spots due to runtime and metaballs 
-  for (var i = 0; i < spots.length; i= i+20) {
+  for (var i = 0; i < spots.length; i= i+46) {
     var p = spots[i];
     let a = random(0,10);
     let xoff = cos(a)+1;
@@ -64,25 +70,55 @@ function setup() {
    // vertex(p.x , p.y);
   }
     
-    
+// Create liquid object
+ water = new Water(0, height / 2, width, height / 2, 0.1);
+    background(255,255,255);
 }
  
 
  
-      
-    // stroke(255);
-    // strokeWeight(8);
-    // point(pt.x, pt.y);
   
     
     
 
 
 function draw() {
-  background(0,0,255);
+    
+
+    background(255,255,255);
+    background('rgba(0%,0%,100%,0.05)');
+    //image(arrowMouse, mouseX, mouseY,20,30);
+cursor(arrowMouse);
+  // Draw water
+  water.display();
+    
+    
+
+    
+        
+        
+    
   for (var i = 0; i < bubbles.length; i++) {
-    var b = bubbles[i];
+       var b = bubbles[i];
+      // Is the Mover in the liquid?
+    if (water.contains(b)) {
+      // Calculate drag force
+      let dragForce = water.calculateDrag(b);
+      // Apply drag force to bubble
+      b.applyForce(dragForce);
+    }
+
+    // Gravity is scaled by mass
+    let gravity = createVector(0, 0.1 * b.mass);
+    
+      
+      
+      
+   
+      // Apply gravity
+    bubbles[i].applyForce(gravity);
     b.behaviors();
+      
     b.update();
     b.show();
   }
