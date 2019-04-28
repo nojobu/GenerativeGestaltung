@@ -71,15 +71,11 @@ function setup() {
     // Create water
     water = new Water(0, height / 5, width, height, 0.1);
     background(255, 255, 255);
-    cursor(arrowMouse);
-
 }
-
 
 function draw() {
     background(255, 255, 255);
     background('rgba(0%,0%,100%,0.05)');
-    cursor(arrowMouse);
 
     // Draw water
     water.display();
