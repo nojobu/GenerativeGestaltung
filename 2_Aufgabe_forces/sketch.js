@@ -4,7 +4,7 @@
 // Video: https://www.youtube.com/watch?v=4hA7G3gup-4
 
 var font;
-let bounds;
+//let bounds;
 var bubbles = [];
 var spots;
 var arrowMouse;
@@ -23,7 +23,7 @@ function preload() {
 function setup() {
     createCanvas(600, 300);
     //cursor(arrowMouse);
-
+    noCursor();
     imageMode(CENTER);
 
     background(0, 0, 0);
@@ -50,7 +50,6 @@ function setup() {
                 spots.push(createVector(x, y));
             }
         }
-
     }
 
     //do not fill all spots due to runtime

@@ -33,6 +33,6 @@ Water.prototype.calculateDrag = function(m) {
 Water.prototype.display = function() {
   noStroke();
   fill('rgba(0%,0%,100%,0.55)');
-  rect(this.x, this.y, this.w, this.h);
+  rect(this.x, this.y, this.w, this.h, 5);
     
 }
