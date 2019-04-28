@@ -56,7 +56,7 @@ function setup() {
     let yoff = sin(a)+1;
     var r_size = map(noise(xoff, yoff),0,1,1,28);  
     //console.log(r_size);
-    var bubble = new Bubble(p.x, p.y, r_size);
+    var bubble = new Bubble(p.x, p.y, r_size,2.0, true);
     bubbles.push(bubble);
  //vertex(p.x * width / bounds.w , p.y * height / bounds.h);
    // vertex(p.x , p.y);
@@ -124,7 +124,8 @@ function draw() {
     
     
     for (let i = 0; i < 3; i++) {
-    var eb = new Bubble(random(0,width), height, random(1,20));
+        let r = random(1,10);
+    var eb = new Bubble(random(0,width), height,r,r,false);
     extrabubbles.push(eb);
   }
     
@@ -145,7 +146,7 @@ function draw() {
     eb.applyForce(airforce);
     
     
-   
+   eb.behaviors();
     eb.update();
       
     eb.show();
