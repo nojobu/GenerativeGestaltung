@@ -15,19 +15,29 @@
    var flowers = [];
 
    var actRandomSeed = 0;
-
+   var img;
+    var b;
+var flowerPic;
+//*****************************************************************************
+   function preload() {
+//*****************************************************************************
+      img = loadImage('data/rose.png');
+   }
+//*****************************************************************************
    function setup() {
-      createCanvas(400, 400);
+//*****************************************************************************
+      createCanvas(800 , 800);
 
       //flowfield = new Array(cols * rows);
       cols = floor(width / scl);
       rows = floor(height / scl);
       //background(51);
-      fr = createP('');
+      fr = createP(''); 
       stroke(0, 128);
    }
-
+//*****************************************************************************
    function draw() {
+//*****************************************************************************
       background(255);
       //Flow field
       var yoff = 0;
@@ -36,30 +46,34 @@
          for (var x = 0; x < cols; x++) {
             var index = x + y * cols;
             var angle = noise(xoff, yoff, zoff) * TWO_PI * 4;
-            var v = p5.Vector.fromAngle(angle);
-
+            var vec = p5.Vector.fromAngle(angle);
+             
             //draw basic circle here
-            //flowers[index] = new Flower(x, y, scl, v.heading());
-
+            flowers[index] = new Flower(x, y, scl, v.heading());
 
             xoff += inc;
             stroke(0);
             push();
             translate(x * scl, y * scl);
-            rotate(v.heading());
+            rotate(vec.heading());
             line(0, 0, scl, 0);
-
+             flowerPic.display();
             pop();
          }
          yoff += inc;
          zoff += 0.0004;
       }
+       
 
       //Update view for changing flowers:
       //for (var i = 0; i < flowers.length; i++) {
-         //flowers[i].update();
-        // flowers[i].show();
-
-         fr.html(floor(frameRate()));
+      //flowers[i].update();
+      // flowers[i].show();
       //}
+      fr.html(floor(frameRate()));
+     
+   }
+   function mouseIsPressed(){
+      b = new PictureFlower(mouseX, mouseY, img) ;
+       flowerPic.push(b)
    }
